@@ -8,21 +8,31 @@ SETUP_TOKEN=$(curl -s -m 5 -X GET \
     | jq -r '.["setup-token"]'
 )
 
-MB_TOKEN=$(curl -s -X POST \
-    -H "Content-type: application/json" \
-    http://${MB_HOST}:${MB_PORT}/api/setup \
-    -d '{
-    "token": "'${SETUP_TOKEN}'",
-    "user": {
-        "email": "'${MB_ADMIN_EMAIL}'",
-        "first_name": "'${MB_ADMIN_FIRST_NAME}'",
-        "password": "'${MB_ADMIN_PASSWORD}'"
-    },
-    "prefs": {
-        "allow_tracking": false,
-        "site_name": "Bahmni Metabase"
-    }
-}' | jq -r '.id')
+if [ $SETUP_TOKEN != '' ]
+then
+    create_admin_response=$(curl -s -w "%{http_code}" -X POST \
+        -H "Content-type: application/json" \
+        http://${MB_HOST}:${MB_PORT}/api/setup \
+        -d '{
+        "token": "'${SETUP_TOKEN}'",
+        "user": {
+            "email": "'${MB_ADMIN_EMAIL}'",
+            "first_name": "'${MB_ADMIN_FIRST_NAME}'",
+            "password": "'${MB_ADMIN_PASSWORD}'"
+        },
+        "prefs": {
+            "allow_tracking": false,
+            "site_name": "Bahmni Metabase"
+        }
+    }')
 
-
-echo -e "\n Admin user created!"
+    STATUS=${create_admin_response: -3}
+    if [ $STATUS == 200 ]
+    then
+        echo "\n Admin user created!"
+        MB_TOKEN=$(jq -s -r '.[0].id' <<< ${create_admin_response})
+        source /app/scripts/database/add_openmrs_db.sh
+    fi
+else
+    echo 'SETUP_TOKEN not Available'
+fi

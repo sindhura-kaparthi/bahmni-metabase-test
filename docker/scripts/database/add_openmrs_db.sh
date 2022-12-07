@@ -1,9 +1,8 @@
 #!/bin/bash
 
-
 echo "Adding OPENMRS Database to Metabase"
 
-DATABASE_ID=$(curl -s -X POST \
+database_response=$(curl -s -w "%{http_code}" -X POST \
     -H "Content-type: application/json" \
     -H "X-Metabase-Session: ${MB_TOKEN}" \
     http://${MB_HOST}:${MB_PORT}/api/database \
@@ -16,6 +15,14 @@ DATABASE_ID=$(curl -s -X POST \
             "user": "'${OPENMRS_DB_USERNAME}'",
             "password": "'${OPENMRS_DB_PASSWORD}'"
         }
-}' | jq -r '.id')
+}')
+STATUS=${database_response: -3}
+echo $STATUS
 
-echo "OPENMRS Database added to Metabase"
+if [ $STATUS == 200 ]
+then
+    echo "OPENMRS Database added to Metabase"
+
+    DATABASE_ID=$(jq -s '.[0].id' <<< ${database_response})
+    source /app/scripts/reports/add_reports.sh
+fi

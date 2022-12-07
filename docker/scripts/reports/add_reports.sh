@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 echo "Adding Collection to Metabase"
 
 collection_response=$(curl -s -w "%{http_code}" -X POST \
@@ -54,10 +53,5 @@ then
     }'
 
     echo "Clinic Visit Report Added to Metabase "
-
-else
-    echo $collection_response
+    echo "Bahmni Reports added to Metabase"
 fi
-
-
-echo "Bahmni Reports added to Metabase"
