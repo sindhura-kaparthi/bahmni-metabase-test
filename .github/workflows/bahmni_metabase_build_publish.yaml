@@ -6,13 +6,13 @@ on:
       - 'docker/**'
       - '.github/workflows/bahmni_metabase_build_publish.yaml'
 jobs:
-  Trivy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Trivy Scan
-        run: ./.github/trivy_scan.sh docker .github/workflows/bahmni_metabase_build_publish.yaml
+  # Trivy:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #     - name: Trivy Scan
+  #       run: ./.github/trivy_scan.sh docker .github/workflows/bahmni_metabase_build_publish.yaml
 
   docker-build-publish:
     name: Docker Build & Publish
