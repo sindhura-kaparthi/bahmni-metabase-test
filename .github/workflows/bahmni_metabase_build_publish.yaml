@@ -1,4 +1,4 @@
-name: Build and Publish atomfeed-console Image
+name: Build and Publish
 on:
   push:
     branches: BAH-2581
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Trivy Scan
-        run: ./.github/trivy_scan.sh docker .github/workflows/bahmni_metabase_build_publish.yaml
+        run: ./.github/trivy_scan.sh
 
   docker-build-publish:
     name: Docker Build & Publish
