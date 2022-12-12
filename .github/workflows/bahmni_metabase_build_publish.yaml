@@ -2,9 +2,6 @@ name: Build and Publish
 on:
   push:
     branches: BAH-2581
-    paths:
-      - 'docker/**'
-      - '.github/workflows/bahmni_metabase_build_publish.yaml'
 jobs:
   Trivy:
     runs-on: ubuntu-latest
